@@ -271,9 +271,9 @@ nav a.active::after {
 
 /* Clothing Dropdown Specific Styles */
 .mega-dropdown:nth-of-type(2) .dropdown-content {
-    background: #FFFFFF;
+    background: #0A0A0A;
     border: 2px solid #D4AF37;
-    color: #333333;
+    color: #FFFFFF;
 }
 
 .mega-dropdown:hover .dropdown-content,
