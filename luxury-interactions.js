@@ -8,6 +8,7 @@ class LuxuryInteractions {
 
     init() {
         this.setupSideMenu();
+        this.setupMobileMenu();
         this.setupShoppingCart();
         this.setupProductInteractions();
         this.setupNewsletterValidation();
@@ -19,21 +20,21 @@ class LuxuryInteractions {
     // 1. Unique Side Menu Functionality
     setupSideMenu() {
         // Create side menu HTML if it doesn't exist
-        if (!document.querySelector('.side-menu')) {
+        if (!document.getElementById('sideMenu')) {
             const sideMenuHTML = `
-                <div class="side-menu-overlay"></div>
-                <div class="side-menu">
+                <div id="sideMenuOverlay" class="side-menu-overlay"></div>
+                <div id="sideMenu" class="side-menu">
                     <div class="side-menu-header">
                         <h3>More Options</h3>
                         <button class="close-menu">&times;</button>
                     </div>
                     <nav class="side-menu-nav">
-                        <a href="#about" class="menu-item">About Us</a>
+                        <a href="index.html" class="menu-item">Home</a>
+                        <a href="#shop" class="menu-item">Shop</a>
+                        <a href="#about" class="menu-item">About</a>
                         <a href="#contact" class="menu-item">Contact</a>
-                        <a href="#support" class="menu-item">Support</a>
-                        <a href="#faq" class="menu-item">FAQ</a>
-                        <a href="#careers" class="menu-item">Careers</a>
-                        <a href="#press" class="menu-item">Press</a>
+                        <a href="#" class="menu-item">Login</a>
+                        <a href="cart.html" class="menu-item">Cart</a>
                     </nav>
                 </div>
             `;
@@ -42,8 +43,8 @@ class LuxuryInteractions {
 
         // Event listeners
         const closeBtn = document.querySelector('.close-menu');
-        const overlay = document.querySelector('.side-menu-overlay');
-        const sideMenu = document.querySelector('.side-menu');
+        const overlay = document.getElementById('sideMenuOverlay');
+        const sideMenu = document.getElementById('sideMenu');
 
         if (closeBtn) {
             closeBtn.addEventListener('click', () => this.closeSideMenu());
@@ -54,9 +55,97 @@ class LuxuryInteractions {
         }
     }
 
+    // Mobile Menu Functionality
+    setupMobileMenu() {
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const cartBtn = document.getElementById('cartBtn');
+        const sideMenu = document.getElementById('sideMenu');
+        const overlay = document.getElementById('sideMenuOverlay');
+        const closeBtn = document.getElementById('closeMenu');
+        const accordionHeaders = document.querySelectorAll('.luxury-accordion-header');
+
+        // Open menu
+        if (hamburgerBtn) {
+            hamburgerBtn.addEventListener('click', () => {
+                this.openMobileMenu();
+            });
+        }
+
+        // Cart button
+        if (cartBtn) {
+            cartBtn.addEventListener('click', () => {
+                window.location.href = 'cart.html';
+            });
+        }
+
+        // Close menu
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => {
+                this.closeMobileMenu();
+            });
+        }
+
+        if (overlay) {
+            overlay.addEventListener('click', () => {
+                this.closeMobileMenu();
+            });
+        }
+
+        // ESC key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && sideMenu && sideMenu.classList.contains('active')) {
+                this.closeMobileMenu();
+            }
+        });
+
+        // Accordion functionality
+        accordionHeaders.forEach(header => {
+            header.addEventListener('click', () => {
+                const item = header.parentElement;
+                const isActive = item.classList.contains('active');
+
+                // Close all accordions
+                document.querySelectorAll('.luxury-accordion-item').forEach(i => {
+                    i.classList.remove('active');
+                });
+
+                // Open clicked if not already active
+                if (!isActive) {
+                    item.classList.add('active');
+                }
+            });
+        });
+    }
+
+    openMobileMenu() {
+        const sideMenu = document.getElementById('sideMenu');
+        const overlay = document.getElementById('sideMenuOverlay');
+        const hamburger = document.getElementById('hamburgerBtn');
+
+        if (sideMenu && overlay) {
+            sideMenu.classList.add('active');
+            overlay.classList.add('active');
+            hamburger.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevent scroll
+        }
+    }
+
+    closeMobileMenu() {
+        const sideMenu = document.getElementById('sideMenu');
+        const overlay = document.getElementById('sideMenuOverlay');
+        const hamburger = document.getElementById('hamburgerBtn');
+
+        if (sideMenu && overlay) {
+            sideMenu.classList.remove('active');
+            overlay.classList.remove('active');
+            hamburger.classList.remove('active');
+            document.body.style.overflow = ''; // Restore scroll
+        }
+    }
+
     openSideMenu() {
-        const overlay = document.querySelector('.side-menu-overlay');
-        const sideMenu = document.querySelector('.side-menu');
+        const overlay = document.getElementById('sideMenuOverlay');
+        const sideMenu = document.getElementById('sideMenu');
         const menuItems = document.querySelectorAll('.menu-item');
 
         if (overlay && sideMenu) {
@@ -79,8 +168,8 @@ class LuxuryInteractions {
     }
 
     closeSideMenu() {
-        const overlay = document.querySelector('.side-menu-overlay');
-        const sideMenu = document.querySelector('.side-menu');
+        const overlay = document.getElementById('sideMenuOverlay');
+        const sideMenu = document.getElementById('sideMenu');
         const menuItems = document.querySelectorAll('.menu-item');
 
         if (overlay && sideMenu) {
@@ -443,7 +532,7 @@ class LuxuryInteractions {
 
 // Additional CSS for animations and modals
 const additionalCSS = `
-    .side-menu-overlay {
+    #sideMenuOverlay {
         position: fixed;
         top: 0;
         left: 0;
@@ -457,11 +546,11 @@ const additionalCSS = `
         display: none;
     }
 
-    .side-menu-overlay.active {
+    #sideMenuOverlay.active {
         opacity: 1;
     }
 
-    .side-menu {
+    #sideMenu {
         position: fixed;
         top: 0;
         right: -350px;
@@ -476,7 +565,7 @@ const additionalCSS = `
         padding: 2rem;
     }
 
-    .side-menu.active {
+    #sideMenu.active {
         right: 0;
     }
 
@@ -513,17 +602,36 @@ const additionalCSS = `
     .side-menu-nav {
         display: flex;
         flex-direction: column;
-        gap: 1rem;
     }
 
     .menu-item {
         color: #E5E4E2;
         text-decoration: none;
-        padding: 1rem;
-        border-radius: 8px;
+        padding: 2rem 1rem;
+        border-bottom: 1px solid #2A2D34;
         transition: all 0.3s ease;
         transform: translateX(20px);
         opacity: 0;
+        position: relative;
+    }
+
+    .menu-item:last-child {
+        border-bottom: none;
+    }
+
+    .menu-item::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background-color: #D4AF37;
+        transition: width 0.3s ease;
+    }
+
+    .menu-item:hover::after {
+        width: 100%;
     }
 
     .menu-item.animate-in {
@@ -655,7 +763,7 @@ const additionalCSS = `
             grid-template-columns: 1fr;
         }
 
-        .side-menu {
+        #sideMenu {
             width: 280px;
             right: -280px;
         }
@@ -681,4 +789,3 @@ window.addEventListener('error', (e) => {
 if (!window.IntersectionObserver) {
     console.warn('IntersectionObserver not supported. Scroll animations disabled.');
 }
-
